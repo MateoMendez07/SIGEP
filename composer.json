@@ -1,0 +1,12 @@
+{
+    "name": "sigep/mi-proyecto",
+    "description": "titulacion",
+    "authors": [
+        {
+            "name": "DM"
+        }
+    ],
+    "require": {
+        "phpoffice/phpspreadsheet": "^3.3"
+    }
+}

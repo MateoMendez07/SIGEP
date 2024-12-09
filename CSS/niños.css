@@ -1,0 +1,30 @@
+/* CSS Document */
+/* Ajuste de tamaño y presentación de las celdas */
+    table {
+        width: 100%;
+        table-layout: fixed;
+    }
+
+    th, td {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 5px;
+        font-size: 14px;
+    }
+
+    td input[type="text"], td input[type="date"] {
+        width: 100%;
+        max-width: 200px;
+    }
+
+    button.btn {
+        width: 100%;
+    }
+
+    .table th, .table td {
+        padding: 8px;
+    }
