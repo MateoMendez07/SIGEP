@@ -60,6 +60,7 @@ $menuOptions = [
     ]
     
     ],
+<<<<<<< HEAD
     'Seguimiento' => [
     [
             'name' => 'Seguimiento niños',
@@ -68,6 +69,15 @@ $menuOptions = [
     ]
     
     ]    
+=======
+    'Actualizar ram' => [
+    [
+            'name' => 'Actualizacion',
+            'icon' => 'fa-solid fa-envelope',
+            'link' => 'modificarInformacion.php'       
+    ]
+    ]
+>>>>>>> origin/saraR
 ];
 ?>
 
