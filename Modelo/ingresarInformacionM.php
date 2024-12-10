@@ -52,7 +52,8 @@ class NiñoModel
     /**
      * Actualiza los datos de un niño existente usando el procedimiento almacenado `GestionarNiños`.
      */
-    public function actualizarNiño($numero_nino, $nombre_completo, $aldea, $fecha_nacimiento, $comunidad, $genero, $estado_patrocinio, $fecha_inscripcion)
+    
+public function actualizarNiño($numero_nino, $nombre_completo, $aldea, $fecha_nacimiento, $comunidad, $genero, $estado_patrocinio, $fecha_inscripcion)
     {
         $query = "CALL GestionarNiños('actualizar', ?, ?, ?, ?, ?, ?, ?, ?, NULL, NULL, NULL, NULL)";
         $stmt = $this->conexion->prepare($query);
@@ -79,7 +80,7 @@ class NiñoModel
 
         return "Datos actualizados correctamente.";
     }
-
+    
     /**
      * Obtiene todos los niños usando el procedimiento almacenado `GestionarNiños`.
      */
