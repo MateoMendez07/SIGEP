@@ -58,8 +58,15 @@ $menuOptions = [
             'link' => 'gestionCorrespondencia.php'       
     ]
     
+    ],
+    'Seguimiento' => [
+    [
+            'name' => 'Seguimiento niños',
+            'icon' => 'fa-solid fa-envelope',
+            'link' => 'seguimientoNiños.php'       
     ]
-
+    
+    ]    
 ];
 ?>
 
