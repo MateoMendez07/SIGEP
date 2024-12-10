@@ -1,5 +1,6 @@
-<?php 
+<?php
 session_start();
+
 require '../Modelo/usuarioM.php'; // Incluir el modelo de usuario
 
 class GestorController {
@@ -78,16 +79,11 @@ if (isset($_POST['accion']) || isset($_GET['accion'])) {
             header('Content-Type: application/json');
             echo json_encode($usuarios);
             break;
-        // Acción para obtener datos de un usuario por cédula
-        case 'obtenerPorCedula': // Este es el nombre correcto de la acción en el SP
+        case 'editar':
             $cedula = $_GET['cedula'];
-            $usuario = $controller->obtenerUsuarioPorCedula($cedula); // Obtener datos del usuario
+            $usuario = $controller->obtenerUsuarioPorCedula($cedula);
             header('Content-Type: application/json');
-            if ($usuario) {
-                echo json_encode($usuario); // Retornar datos en formato JSON
-            } else {
-                echo json_encode(['error' => 'Usuario no encontrado']); // Respuesta de error si no se encuentra el usuario
-            }
+            echo json_encode($usuario); // Enviar los datos del usuario en formato JSON
             break;
         case 'obtenerRoles': // Nueva acción para obtener roles
             $roles = $controller->obtenerRoles();

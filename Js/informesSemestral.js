@@ -36,6 +36,7 @@ function cargarSemestres() {
                     <td>${semestre.trim()}</td>
                     <td>
                         <button class="btn btn-primary" onclick="verDetalles('${semestre.trim()}')">Ver Detalles</button>
+                        <button class="btn btn-success" onclick="exportarPDF('${semestre.trim()}')">Exportar a PDF</button>
                     </td>
                 `;
                 tbody.appendChild(tr);
@@ -110,13 +111,50 @@ function verDetalles(semestre) {
                 </thead>
                 <tbody>${rows}</tbody>
             `;
-            
+
             modalBody.appendChild(table);  // Agregar la nueva tabla al modal
         })
         .catch(error => {
             console.error("Error al cargar los detalles:", error);
             modalBody.innerHTML = `<p>Error al cargar los detalles del semestre. ${error.message}</p>`;
         });
+}
+
+// Función para exportar la tabla a PDF
+function exportarPDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    // Asegurarse de que el modal y la tabla existen antes de intentar acceder a ellos
+    const modalBody = document.querySelector("#modalDetalles .modal-body");
+    if (!modalBody) {
+        alert("El contenido del modal no está disponible.");
+        return;
+    }
+
+    if (!modalBody.innerHTML) {
+        alert("No hay datos para exportar.");
+        return;
+    }
+
+    const table = modalBody.querySelector("table");
+    if (!table) {
+        alert("No se encontró la tabla para exportar.");
+        return;
+    }
+
+    const headers = Array.from(table.querySelectorAll("thead th")).map(th => th.textContent.trim());
+    const rows = Array.from(table.querySelectorAll("tbody tr")).map(tr => {
+        return Array.from(tr.querySelectorAll("td")).map(td => td.textContent.trim());
+    });
+
+    doc.autoTable({
+        head: [headers],
+        body: rows,
+        theme: 'grid',
+    });
+
+    doc.save('informe_semestre.pdf');
 }
 
 // Cargar los semestres al iniciar la página

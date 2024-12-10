@@ -5,8 +5,8 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-require '../vendor/autoload.php';
-require '../Modelo/ingresarInformacionM.php';
+require '../vendor/autoload.php'; // Asegúrate de cargar el autoloader de Composer
+require '../Modelo/ingresarInformacionM.php'; // Incluir el modelo
 
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
@@ -18,60 +18,45 @@ class FileUploadController {
     }
 
     public function upload() {
-        $mensaje = '';
-        // Obtener el mes seleccionado del formulario
-        $mesSeleccionado = isset($_POST['selectMonth']) ? $_POST['selectMonth'] : null;
+        $mensaje = ''; // Variable para almacenar mensajes
 
         if (isset($_POST['upload']) && isset($_FILES['excelFile'])) {
             $file = $_FILES['excelFile']['tmp_name'];
 
             if (is_uploaded_file($file)) {
+                // Cargar el archivo Excel
                 try {
                     $spreadsheet = IOFactory::load($file);
                     $worksheet = $spreadsheet->getActiveSheet();
 
-                    $filaInicio = 2;
+                    // Iterar sobre las filas del archivo Excel
+                    $filaInicio = 2; // Suponiendo que la primera fila es de encabezados
                     foreach ($worksheet->getRowIterator($filaInicio) as $row) {
-                        $filaIndex = $row->getRowIndex();
+                        // Obtener las celdas de cada fila
+                        $numero_nino = $worksheet->getCell("A" . $row->getRowIndex())->getValue();
+                        $nombre_completo = $worksheet->getCell("B" . $row->getRowIndex())->getValue();
+                        $aldea = $worksheet->getCell("C" . $row->getRowIndex())->getValue();
 
-                        // Obtener valores y validar
-                        $numero_nino = $this->getCellValue($worksheet, "A$filaIndex");
-                        $nombre_completo = $this->getCellValue($worksheet, "B$filaIndex");
-                        $aldea = $this->getCellValue($worksheet, "C$filaIndex");
-                        $fecha_nacimiento = $this->convertExcelDateToYMD($worksheet, "D$filaIndex");
-                        $comunidad = $this->getCellValue($worksheet, "E$filaIndex");
-                        $genero = $this->getCellValue($worksheet, "F$filaIndex");
-                        $estado_patrocinio = $this->getCellValue($worksheet, "G$filaIndex");
-                        $fecha_inscripcion = $this->convertExcelDateToYMD($worksheet, "H$filaIndex");
-                        $socio_local = $this->getCellValue($worksheet, "I$filaIndex");
-                        $nombre_alianza = $this->getCellValue($worksheet, "J$filaIndex");
-                        $nombre_contacto_principal = $this->getCellValue($worksheet, "K$filaIndex");
+                        // Convertir la fecha de Excel a un formato de fecha
+                        $fecha_nacimiento = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($worksheet->getCell("D" . $row->getRowIndex())->getValue())->format('Y-m-d');
+                        $comunidad = $worksheet->getCell("E" . $row->getRowIndex())->getValue();
+                        $genero = $worksheet->getCell("F" . $row->getRowIndex())->getValue();
+                        $estado_patrocinio = $worksheet->getCell("G" . $row->getRowIndex())->getValue();
+                        $fecha_inscripcion = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($worksheet->getCell("H" . $row->getRowIndex())->getValue())->format('Y-m-d');
+                        $socio_local = $worksheet->getCell("I" . $row->getRowIndex())->getValue();
+                        $nombre_alianza = $worksheet->getCell("J" . $row->getRowIndex())->getValue();
+                        $nombre_contacto_principal = $worksheet->getCell("K" . $row->getRowIndex())->getValue();
 
-                        // Insertar datos en la base de datos
-                        $resultado = $this->niñoModel->insertarNiño(
-                            $numero_nino,
-                            $nombre_completo,
-                            $aldea,
-                            $fecha_nacimiento,
-                            $comunidad,
-                            $genero,
-                            $estado_patrocinio,
-                            $fecha_inscripcion,
-                            $socio_local,
-                            $nombre_alianza,
-                            $nombre_contacto_principal,
-                            $mesSeleccionado // Pasar el mes seleccionado
-                        );
+                        // Llamar al modelo para insertar los datos
+                        $resultado = $this->niñoModel->insertarNiño($numero_nino, $nombre_completo, $aldea, $fecha_nacimiento, $comunidad, $genero, $estado_patrocinio, $fecha_inscripcion, $socio_local, $nombre_alianza, $nombre_contacto_principal);
 
-                        // Registrar errores si los hay
+                        // Manejar el resultado de la inserción
                         if (strpos($resultado, "Error") !== false) {
-                            $mensaje .= "Error al insertar datos en la fila $filaIndex: $resultado <br>";
+                            $mensaje .= "Error al insertar datos en la fila " . $row->getRowIndex() . ": " . $resultado . "<br>";
                         }
                     }
 
-                    if (empty($mensaje)) {
-                        $mensaje = "Archivo procesado correctamente.";
-                    }
+                    $mensaje .= "Archivo procesado correctamente.";
                 } catch (Exception $e) {
                     $mensaje = 'Error al procesar el archivo: ' . $e->getMessage();
                 }
@@ -80,92 +65,14 @@ class FileUploadController {
             }
         }
 
-        $_SESSION['mensaje'] = $mensaje;
-        header('Location: ../Vista/ingresarInformacion.php');
-        exit;
-    }
-
-    // Método auxiliar para obtener valores de celdas
-    private function getCellValue($worksheet, $cellAddress) {
-        $value = $worksheet->getCell($cellAddress)->getValue();
-        return $value !== null ? trim($value) : null;
-    }
-
-    // Método auxiliar para convertir fechas de Excel a formato Y-m-d
-    private function convertExcelDateToYMD($worksheet, $cellAddress) {
-        $value = $this->getCellValue($worksheet, $cellAddress);
-
-        if ($value !== null && is_numeric($value)) {
-            try {
-                $dateTime = PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($value);
-                return $dateTime->format('Y-m-d');
-            } catch (Exception $e) {
-                // Manejar valores no válidos
-                error_log("Error al convertir fecha en $cellAddress: " . $e->getMessage());
-                return null;
-            }
-        }
-
-        return null;
-    }
-
-
-    // Método para modificar la información de los niños
-    public function modificar() {
-        $mensaje = '';
-        if (isset($_POST['modificar'])) {
-            $numero_nino = $_POST['numero_nino'];
-            $nombre_completo = $_POST['nombre_completo'];
-            $aldea = $_POST['aldea'];
-            $fecha_nacimiento = $_POST['fecha_nacimiento'];
-            $comunidad = $_POST['comunidad'];
-            $genero = $_POST['genero'];
-            $estado_patrocinio = $_POST['estado_patrocinio'];
-            $fecha_inscripcion = $_POST['fecha_inscripcion'];
-
-            foreach ($numero_nino as $index => $num_nino) {
-                $resultado = $this->niñoModel->actualizarNiño(
-                    $num_nino, 
-                    $nombre_completo[$index], 
-                    $aldea[$index], 
-                    $fecha_nacimiento[$index], 
-                    $comunidad[$index], 
-                    $genero[$index], 
-                    $estado_patrocinio[$index], 
-                    $fecha_inscripcion[$index]
-                );
-
-                if (strpos($resultado, "Error") !== false) {
-                    $mensaje .= "Error al actualizar el niño con número: $num_nino. <br>";
-                }
-            }
-
-            $mensaje .= "Información modificada correctamente.";
-        }
-
-        $_SESSION['mensaje'] = $mensaje;
-        header('Location: ../Vista/modificarInformacion.php');
-        exit;
-    }
-
-    // Método para obtener el historial de archivos subidos por mes
-    public function getHistorialMensual($mesSeleccionado)
-    {
-        //$historial = $this->niñoModel->obtenerHistorialMensual($mesSeleccionado);
-        //return $historial;
+        // Redirigir a la vista
+        $_SESSION['mensaje'] = $mensaje; // Almacenar el mensaje en la sesión
+        header('Location: ../Vista/ingresarInformacion.php'); // Redirigir a la vista
+        exit; // Asegurarse de salir después de redirigir
     }
 }
 
-// Crear una instancia del controlador y llamar al método según el caso
+// Crear una instancia del controlador y llamar al método upload
 $controller = new FileUploadController();
-
-if (isset($_POST['upload'])) {
-    $controller->upload();
-} elseif (isset($_POST['modificar'])) {
-    $controller->modificar();
-} elseif (isset($_GET['mes'])) {
-    $mesSeleccionado = $_GET['mes'];
-    $historial = $controller->getHistorialMensual($mesSeleccionado);
-    // Aquí puedes enviar $historial a la vista para mostrarlo
-}
+$controller->upload();
 ?>

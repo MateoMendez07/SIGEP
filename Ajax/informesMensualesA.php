@@ -16,3 +16,4 @@ if ($action === 'obtenerMeses') {
 } else {
     echo json_encode(['error' => 'Acción no válida']);
 }
+?>

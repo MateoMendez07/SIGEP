@@ -27,7 +27,7 @@ ob_start();
         <div class="container-fluid">
             <!-- Botón para agregar nuevo usuario -->
             <button class="btn btn-success mb-3" data-toggle="modal" data-target="#modalUsuario" onclick="mostrarFormularioAgregar()">
-                <i class="fas fa-plus"></i> Agregar Usuario
+    			<i class="fas fa-plus"></i> Agregar Usuario
 			</button>
 
             
@@ -73,10 +73,10 @@ ob_start();
                                     <input type="email" name="correo_electronico" id="correo_electronico" class="form-control" required>
                                 </div>
                                 <div class="form-group">
-                                    <label for="id_rol">Rol:</label>
-                                    <select name="id_rol" id="id_rol" class="form-control" required>
-                                        <!-- Las opciones se cargarán dinámicamente -->
-                                    </select>
+   							 		<label for="id_rol">Rol:</label>
+    								<select name="id_rol" id="id_rol" class="form-control" required>
+        							<!-- Las opciones se cargarán dinámicamente -->
+    								</select>
 								</div>
                                 <div class="form-group">
                                     <label for="contrasena">Contraseña:</label>

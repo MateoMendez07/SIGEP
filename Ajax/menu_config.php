@@ -3,11 +3,10 @@ $menuOptions = [
     'Coordinador' => [
         [
             'name' => 'Niños',
-            'icon' => 'fa-solid fa-file-circle-plus',
+            'icon' => 'fa-solid fa-file',
             'submenus' => [
                 ['name' => 'Subir Información', 'link' => 'ingresarInformacion.php'],
-                ['name' => 'Modificar', 'link' => 'modificarInformacion.php'],
-                ['name'=> 'Asignar', 'link' => 'asignarAdministradores.php']
+                ['name' => 'Modificar', 'link' => 'modificarInformacion.php']
             ]
         ],
         [
@@ -16,18 +15,21 @@ $menuOptions = [
             'link' => 'tiempos.php'
         ],
         [
-            'name' => 'Informes',
-            'icon' => 'fa-solid fa-file-alt',
-            'submenus' => [
-                ['name' => 'Semestrales', 'link' => 'Semestral.php'],
-                ['name' => 'Mensuales', 'link' => 'Mensuales.php'],
-                ['name' => 'Anuales', 'link' => 'Anual.php']
-            ]
+            'name' => 'Reportes',
+            'icon' => 'fas fa-file-alt',
+            'link' => 'reportes.php'
         ],
         [
             'name' => 'Gestión',
             'icon' => 'fa-solid fa-cogs',
             'link' => 'usuarios.php'
+        ]
+    ],
+    'Actualizar ram' => [
+        [
+            'name' => 'Niños',
+            'icon' => 'fa-solid fa-file-circle-plus',
+            'link' => 'modificarInformacion.php'
         ]
     ],
     'Admin' => [
@@ -50,17 +52,6 @@ $menuOptions = [
             'icon' => 'fas fa-project-diagram',
             'link' => 'Notificaciones.php'
         ]
-    ],
-    'Correspondencia' => [
-    [
-            'name' => 'Gestión de Correspondencia',
-            'icon' => 'fa-solid fa-envelope',
-            'link' => 'gestionCorrespondencia.php'       
     ]
-    
-    ]
-
 ];
 ?>
-
-

@@ -6,7 +6,7 @@
 :root,
 :host {
   --fa-style-family-classic: 'Font Awesome 6 Free';
-  --fa-font-regular: normal 400 1em 'Font Awesome 6 Free';
+  --fa-font-regular: normal 400 1em/1 'Font Awesome 6 Free';
 }
 @font-face {
   font-family: 'Font Awesome 6 Free';
