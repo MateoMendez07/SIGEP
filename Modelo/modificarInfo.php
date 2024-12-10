@@ -14,20 +14,47 @@ class NiñoModel
         }
     }
 
-    // Otros métodos...
+    /**
+     * Inserta un nuevo niño usando el procedimiento almacenado `GestionarNiños`.
+     */
+    public function insertarNiño($numero_nino, $nombre_completo, $aldea, $fecha_nacimiento, $comunidad, $genero, $estado_patrocinio, $fecha_inscripcion, $socio_local, $nombre_alianza, $nombre_contacto_principal, $mesSeleccionado)
+    {
+        $query = "CALL GestionarNiños('insertar', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $stmt = $this->conexion->prepare($query);
+
+        if (!$stmt) {
+            throw new Exception("Error al preparar la consulta: " . $this->conexion->error);
+        }
+
+        $stmt->bind_param(
+            "isssssssssss",
+            $numero_nino,
+            $nombre_completo,
+            $aldea,
+            $fecha_nacimiento,
+            $comunidad,
+            $genero,
+            $estado_patrocinio,
+            $fecha_inscripcion,
+            $socio_local,
+            $nombre_alianza,
+            $nombre_contacto_principal,
+            $mesSeleccionado
+        );
+
+        if (!$stmt->execute()) {
+            throw new Exception("Error al ejecutar el procedimiento almacenado: " . $stmt->error);
+        }
+
+        return "Datos insertados correctamente.";
+    }
 
     /**
      * Actualiza los datos de un niño existente usando el procedimiento almacenado `GestionarNiños`.
      */
-    public function actualizarNiño($numero_nino, $nombre_completo, $aldea, $fecha_nacimiento, $comunidad, $genero, $estado_patrocinio, $fecha_inscripcion)
+    
+public function actualizarNiño($numero_nino, $nombre_completo, $aldea, $fecha_nacimiento, $comunidad, $genero, $estado_patrocinio, $fecha_inscripcion)
     {
-        // Primero, verifica si el niño está inactivo
-        $estadoActual = $this->obtenerEstadoNiño($numero_nino);
-        if ($estadoActual === 'inactivo') {
-            throw new Exception("No se pueden modificar los datos de un niño con estado 'inactivo'.");
-        }
-
-        // Procede con la actualización si el estado no es inactivo
         $query = "CALL GestionarNiños('actualizar', ?, ?, ?, ?, ?, ?, ?, ?, NULL, NULL, NULL, NULL)";
         $stmt = $this->conexion->prepare($query);
 
@@ -53,31 +80,71 @@ class NiñoModel
 
         return "Datos actualizados correctamente.";
     }
+    
+    /**
+     * Obtiene todos los niños usando el procedimiento almacenado `GestionarNiños`.
+     */
+    public function obtenerNiños()
+    {
+        $query = "CALL GestionarNiños('obtener', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL)";
+        $result = $this->conexion->query($query);
+
+        if (!$result) {
+            throw new Exception("Error al ejecutar el procedimiento almacenado: " . $this->conexion->error);
+        }
+
+        $ninos = [];
+        while ($row = $result->fetch_assoc()) {
+            $ninos[] = $row;
+        }
+
+        return $ninos;
+    }
 
     /**
-     * Obtiene el estado actual de un niño por su número.
+     * Obtiene los meses disponibles usando el procedimiento almacenado `GestionarNiños`.
      */
-    private function obtenerEstadoNiño($numero_nino)
+    public function obtenerMesesDisponibles()
     {
-        $query = "CALL GestionarNiños('obtenerEstado', ?, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL)";
+        $query = "CALL GestionarNiños('obtenerMesesDisponibles', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL)";
+        $result = $this->conexion->query($query);
+
+        if (!$result) {
+            throw new Exception("Error al ejecutar el procedimiento almacenado: " . $this->conexion->error);
+        }
+
+        $meses = [];
+        while ($row = $result->fetch_assoc()) {
+            $meses[] = $row;
+        }
+
+        return $meses;
+    }
+
+    /**
+     * Obtiene niños registrados en un mes específico usando el procedimiento almacenado `GestionarNiños`.
+     */
+    public function obtenerNiñosPorMes($mesSeleccionado)
+    {
+        $query = "CALL GestionarNiños('obtenerPorMes', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, ?)";
         $stmt = $this->conexion->prepare($query);
 
         if (!$stmt) {
             throw new Exception("Error al preparar la consulta: " . $this->conexion->error);
         }
 
-        $stmt->bind_param("i", $numero_nino);
+        $stmt->bind_param("s", $mesSeleccionado);
 
         if (!$stmt->execute()) {
             throw new Exception("Error al ejecutar el procedimiento almacenado: " . $stmt->error);
         }
 
         $result = $stmt->get_result();
-
-        if ($row = $result->fetch_assoc()) {
-            return $row['estado_patrocinio']; // Asegúrate de que este campo coincide con tu base de datos
-        } else {
-            throw new Exception("No se encontró el niño con el número proporcionado.");
+        $ninos = [];
+        while ($row = $result->fetch_assoc()) {
+            $ninos[] = $row;
         }
+
+        return $ninos;
     }
 }
