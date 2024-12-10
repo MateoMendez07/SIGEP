@@ -58,8 +58,14 @@ $menuOptions = [
             'link' => 'gestionCorrespondencia.php'       
     ]
     
+    ],
+    'Actualizar ram' => [
+    [
+            'name' => 'Actualizacion',
+            'icon' => 'fa-solid fa-envelope',
+            'link' => 'modificarInformacion.php'       
     ]
-
+    ]
 ];
 ?>
 
