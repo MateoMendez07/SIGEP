@@ -1,4 +1,5 @@
 <?php
+//Opciones que se le da a cada usurio con su debida informacion
 $menuOptions = [
     'Coordinador' => [
         [

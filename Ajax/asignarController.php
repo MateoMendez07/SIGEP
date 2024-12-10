@@ -3,7 +3,6 @@ require_once "../Modelo/asignarAModelo.php";
 require_once "../Modelo/asignarNiModelo.php";
 
 header('Content-Type: application/json');
-
 function responder($data, $codigo = 200) {
     http_response_code($codigo);
     echo json_encode($data);
