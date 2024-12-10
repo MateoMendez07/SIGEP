@@ -64,6 +64,6 @@ $contenido = ob_get_clean();
 require "layout.php";
 ?>	
 
-<script src="../Js/modificarInformacion.js"></script>
+<script src="../Js/modificarInfo.js"></script>
 
 <link rel="stylesheet" href="../CSS/niños.css">
