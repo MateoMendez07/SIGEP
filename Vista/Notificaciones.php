@@ -19,22 +19,34 @@ ob_start();
     </div>
 </div>
 
-<!-- Tabla para mostrar las observaciones -->
+<!-- Tabla para mostrar los gestores y el botón de acción -->
 <table id="tablaNotificaciones" class="table table-bordered table-striped">
     <thead>
         <tr>
-            <th>Código MCS</th>
-            <th>Nombre Completo</th>
-            <th>Observaciones</th>
             <th>Gestor</th>
+            <th>Acción</th>
         </tr>
     </thead>
     <tbody>
     </tbody>
 </table>
-<!-- Incluyendo jQuery antes de tu archivo JS -->
+
+<!-- Incluir jQuery y Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+<!-- Incluir DataTables CSS y JS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+
+<!-- Tu archivo JS personalizado -->
 <script src="../Js/notificaciones.js"></script>
+
+<script>
+$(document).ready(function() {
+    $('#tablaNotificaciones').DataTable();
+});
+</script>
 
 <?php
 $contenido = ob_get_clean();

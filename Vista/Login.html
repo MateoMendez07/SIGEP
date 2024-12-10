@@ -4,8 +4,143 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inicio de sesión</title>
-    <link rel="stylesheet" href="../CSS/Login.css">
-    </head>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #e8f5e9;
+            color: #333;
+            background-image: url('../Recursos/fondo3.png'), url('../Recursos/logos1.png'), url('../Recursos/logos1.png');
+            background-position: center center, left bottom, right top; /* La franja de flores centrada horizontalmente */
+            background-repeat: no-repeat, no-repeat, no-repeat;
+            background-size: 1850px 785px, 550px, 550px; /* La franja de flores tiene 50px de alto */
+        }
+
+        .container {
+            display: flex;
+            width: 90%;
+            max-width: 600px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 0.6s ease-in-out;
+            border: 1px solid #a5d6a7;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .half {
+            width: 50%;
+            padding: 40px;
+            box-sizing: border-box;
+        }
+
+        .green-background {
+            background-color: #a5d6a7;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .green-background h1 {
+            margin: 0;
+            font-size: 2.5em;
+            color: #ffffff;
+        }
+
+        .white-background {
+            background-color: white;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border-left: 1px solid #a5d6a7;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            margin-top: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 1.1em;
+            color: #388e3c;
+        }
+
+        .input-field {
+            width: calc(100% - 30px);
+            padding: 10px;
+            border: 1px solid #c8e6c9;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .input-field:focus {
+            border-color: #81c784;
+            outline: none;
+            box-shadow: 0 0 8px rgba(129, 199, 132, 0.6);
+        }
+
+        .eye-icon {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            width: 20px;
+            height: 20px;
+            z-index: 1;
+        }
+
+        .submit-button {
+            padding: 10px;
+            background-color: #66bb6a;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s, transform 0.2s;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .submit-button:hover {
+            background-color: #4caf50;
+            transform: translateY(-2px);
+        }
+
+        .submit-button:active {
+            transform: translateY(0);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #666;
+        }
+    </style>
+</head>
 <body>
     <div class="container">
         <div class="half green-background">
@@ -34,7 +169,7 @@
             </div>
         </div>
     </div>
-    <script src="../Public/js/jquery-3.7.1.min.js"></script>  
+    <script src="../Public/js/jquery-3.7.1.min.js"></script>
     <script src="../Js/login.js"></script>
     <script>
         function togglePasswordVisibility() {

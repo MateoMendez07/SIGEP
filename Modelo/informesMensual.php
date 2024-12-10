@@ -24,20 +24,21 @@ class Informes
     }
 
     public function obtenerInformeMensual($mes)
-{
-    try {
-        if (!preg_match('/^\d{4}-(0[1-9]|1[0-2])$/', $mes)) {
-            throw new Exception("Formato de mes inválido: $mes");
-        }
+    {
+        try {
+            if (!preg_match('/^\d{4}-(0[1-9]|1[0-2])$/', $mes)) {
+                throw new Exception("Formato de mes inválido: $mes");
+            }
 
-        $stmt = $this->conexion->prepare("CALL ObtenerInformeMensual(?)");
-        $stmt->bind_param("s", $mes);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $informe = $result->fetch_assoc();
-        echo json_encode($informe);
-    } catch (Exception $e) {
-        echo json_encode(['error' => 'Error al obtener el informe: ' . $e->getMessage()]);
+            $stmt = $this->conexion->prepare("CALL ObtenerInformeMensual(?)");
+            $stmt->bind_param("s", $mes);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $informe = $result->fetch_all(MYSQLI_ASSOC);
+            echo json_encode($informe);
+        } catch (Exception $e) {
+            echo json_encode(['error' => 'Error al obtener el informe: ' . $e->getMessage()]);
+        }
     }
 }
-}
+?>
